@@ -1,4 +1,4 @@
-# Bad ECC
+# Unsafe ECC
 
 Proof of concept and explainers to ECC vulnerabilities. It doesn't just tell you "Don't do this, it is exploitable. Do this rather', it also shows you how exactly it's exploitable and how the formula is derived.
 
