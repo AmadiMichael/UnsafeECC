@@ -67,7 +67,6 @@ def generate_fake_signature(pub: PlainPoint2D) -> (bytes, Tuple[int, int, int]):
     # The message, `h` can also be calculated in a similar way
     # Given s1 = inv(s)
     #   a = h * s1
-    #   a1 = inv(a)
     #   h = a * s
     #
     #

@@ -48,7 +48,7 @@ def generate_easy_fake_signature(pub: PlainPoint2D) -> (bytes, Tuple[int, int, i
     # c = a + b // this will be Q
     # c.x == r // this will be true!
 
-    message = bytes.fromhex("00")
+    message = bytes.fromhex("0000000000000000000000000000000000000000000000000000000000000000")
     easy_fake_sig = (27, pub[0], pub[0])
     
     assert ecdsa_raw_verify(message, easy_fake_sig, pub)
@@ -59,6 +59,6 @@ def generate_easy_fake_signature(pub: PlainPoint2D) -> (bytes, Tuple[int, int, i
 
 
 
-a_priv = bytes.fromhex("02")
+a_priv = bytes.fromhex("0000000000000000000000000000000000000000000000000000000000000002")
 a_pub = privtopub(a_priv) 
 print(generate_easy_fake_signature(a_pub))
