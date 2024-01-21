@@ -53,8 +53,9 @@ def derive(hd_parent_node_info: (PlainPoint2D, int, int), index: int, isHardened
 # THE OBVIOUS QUESTION IS WHY NOT HARDEN EVERYTHING
 # One benefit of HD wallets is being able to generate child addresses by only having the parent public key and chain code. This is helpful for audits and generating one time addresses on an untrusted server
 #
-# How paths are defined "m / purpose' / coin_type' / account' / change / address_index" (an apostrophe means it's a hardened path)
-# All child wallets from the account derivation path and above are hardened, the change path and address_index path is not to facilitate the above use case
+# How paths are defined (an apostrophe means it's a hardened path):
+#   "m / purpose' / coin_type' / account' / change / address_index"
+# All child wallets from the account derivation path and before are hardened, the change path and address_index path is not to facilitate the above use case
 
 
 # INDEPTH
@@ -85,7 +86,7 @@ global_hd_master_pub = privtopub(int_to_bytes(global_hd_master_priv))
 global_chaincode = 104326670430597193981057684893345542428774993972637944294968933122272829988816
 global_hd_master_node_info = (global_hd_master_pub, global_hd_master_priv, global_chaincode)
 
-# derive paths
+# derivation paths steps, ethereum uses "m/44'/60'/0'/0/0"
 # m/44'
 m_44prime = derive(global_hd_master_node_info, 44, True)
 # m/44'/60'
