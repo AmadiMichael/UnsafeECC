@@ -88,20 +88,20 @@ global_hd_master_node_info = (global_hd_master_pub, global_hd_master_priv, globa
 
 # derivation paths steps, ethereum uses "m/44'/60'/0'/0/0"
 # m/44'
-m_44prime = derive(global_hd_master_node_info, 44, True)
+purpose_path = derive(global_hd_master_node_info, 44, True)
 # m/44'/60'
-m_44prime_60prime = derive(m_44prime, 60, True)
+coin_type_path = derive(purpose_path, 60, True)
 # m/44'/60'/0'
-m_44prime_60prime_0prime = derive(m_44prime_60prime, 0, True)
+account_path = derive(coin_type_path, 0, True)
 # m/44'/60'/0'/0
-m_44prime_60prime_0prime_0 = derive(m_44prime_60prime_0prime, 0, False)
+change_path = derive(account_path, 0, False)
 # m/44'/60'/0'/0/0
-m_44prime_60prime_0prime_0_0 = derive(m_44prime_60prime_0prime_0, 0, False)
+address_index_path = derive(change_path, 0, False)
 
 
 
 # Exploit function
-def get_parent_private_key(parent_pub_key: PlainPoint2D, child_private_key: int, index_of_child: int, parent_chain_code: int) -> int:
+def get_parent_private_key(parent_pub_key: PlainPoint2D, parent_chain_code: int, child_private_key: int, index_of_child: int) -> int:
     hash = hmac.new(parent_chain_code.to_bytes(32, 'big'), compress_pub_key(parent_pub_key) + index_of_child.to_bytes(4, 'big'), digestmod=hashlib.sha512).digest()
     
     offset = bytes_to_int(hash[0:32])
@@ -110,6 +110,26 @@ def get_parent_private_key(parent_pub_key: PlainPoint2D, child_private_key: int,
     return parent_priv_key
 
 
+
+
 # Exploit
-recoveredParentPublicKey = get_parent_private_key(m_44prime_60prime_0prime_0[0], m_44prime_60prime_0prime_0_0[1], 0, m_44prime_60prime_0prime_0[2])
-assert(recoveredParentPublicKey == m_44prime_60prime_0prime_0[1])
+
+# Remember path names
+#   "m / purpose' / coin_type' / account' / change / address_index"
+
+
+# Recovery of change path's private key using change path public_key, change path chaincode, any address_index path's private key and it's index
+recoveredParentPublicKey = get_parent_private_key(change_path[0], change_path[2],  address_index_path[1], 0)
+assert(recoveredParentPublicKey == change_path[1])
+
+# Recovery of account path's private key using account path public_key, account path chaincode, any chain path's private key and it's index
+recoveredParentPublicKey = get_parent_private_key(account_path[0], account_path[2], change_path[1], 0)
+assert(recoveredParentPublicKey == account_path[1])
+
+# Cannot be done to recover a coin_type private key from it's account_path child successfully because all account_path's are hardened derivations
+recoveredParentPublicKey = get_parent_private_key(coin_type_path[0], coin_type_path[2], account_path[1], 0)
+assert(recoveredParentPublicKey != coin_type_path[1])
+
+# Cannot be done to recover a purpose_path private key from it's coin_type_path child successfully because all coint_type_path's are hardened derivations
+recoveredParentPublicKey = get_parent_private_key(purpose_path[0], purpose_path[2], coin_type_path[1], 0)
+assert(recoveredParentPublicKey != purpose_path[1])
