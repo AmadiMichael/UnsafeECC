@@ -16,6 +16,7 @@ from ECC import (
 
 # HELPER FUNCTIONS, EXPLOIT FUNCTION CAN BE FOUND BELOW
 
+# SELF WRITTEN HD WALLET DERIVATION IMPLEMENATION, NOT AUDITED, DO NOT USE IN PRODUCTION
 def int_to_bytes(integer) -> int:
     return integer.to_bytes((integer.bit_length() + 7) // 8, 'big')
 
