@@ -34,7 +34,7 @@ def generate_fake_signature(pub: PlainPoint2D) -> (bytes, Tuple[int, int, int]):
     #
     # You might see where this is going already
     # Next, multiply both sides by G
-    #   Gk = (s1 * h * G) + (G * s1 * r * p * G)
+    #   Gk = (s1 * h * G) + (s1 * r * p * G)
     #
     # We don't know priv, but we know the public key so let's use that instead so that everything on the left hand side are known values
     #   Gk = (G * s1 * h) + (s1 * r * pub)
